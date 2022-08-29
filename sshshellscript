@@ -1,0 +1,31 @@
+echo "Enter git hub persnol acces token"
+read token
+#echo $token >token.txt
+#cat token.txt
+cat ~/.ssh/id_rsa.pud
+#if conditon to validate weather ssh keys are already present or not
+if [ $? -eq 0 ]
+then echo "SSH Keeys are alread persent..."
+else
+echo "SSH Keys are are not present...,creat the ssh-keygen command"
+ssh-keygen -t rsa
+echo "SSH Keys succesfully generated"
+fi
+
+sshkey= cat ~/.ssh/id_rsa.pub
+
+if [ $? -eq 0 ]
+then
+echo "copy the key to GitHub account"
+curl -X POST -H "content type: application/json" -d"{\"title\": \"SSHKEY\",\"key\": \"$sshkey\"}" "https://api.github.com/user/keys?access_token=$token"
+if [ $? -eq 0 ]
+then
+echo "feiled"
+exit 1
+fi
+else
+echo "failure in generating the key"
+exit 1
+fi
+
+
